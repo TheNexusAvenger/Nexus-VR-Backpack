@@ -12,6 +12,19 @@
             "TestLoader": {
                 "$path": "./place/ServerScriptService/TestLoader.server.lua"
             }
+        },
+        "StarterPlayer": {
+            "$className": "StarterPlayer",
+            "StarterPlayerScripts": {
+                "$className": "StarterPlayerScripts",
+                "$path": "./place/StarterPlayerScripts"
+            }
+        },
+        "TestService": {
+            "$className": "TestService",
+            "NexusVRBackpackTest": {
+                "$path": "./test"
+            }
         }
     }
 }
