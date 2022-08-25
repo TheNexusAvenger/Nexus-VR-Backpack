@@ -148,6 +148,19 @@ return function()
             expect(TestToolIcon.ToolText.Visible).to.equal(false)
             expect(TestToolIcon.ToolImage.Visible).to.equal(true)
         end)
+
+        it("should change tools", function()
+            local Tool = Instance.new("Tool")
+            Tool.Name = "TestName"
+            TestToolIcon:SetTool(Tool)
+            local NewTool = Instance.new("Tool")
+            NewTool.Name = "NewName"
+            TestToolIcon:SetTool(NewTool)
+
+            expect(TestToolIcon.ToolText.Text).to.equal("NewName")
+            expect(TestToolIcon.ToolText.Visible).to.equal(true)
+            expect(TestToolIcon.ToolImage.Visible).to.equal(false)
+        end)
     end)
 
     describe("ToolIcon with a tool with an icon", function()
