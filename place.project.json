@@ -1,0 +1,17 @@
+{
+    "name": "Nexus-VR-Backpack",
+    "tree": {
+        "$className": "DataModel",
+        "ServerScriptService": {
+            "MainModule": {
+                "$path": "./place/ServerScriptService/MainModule.lua",
+                "NexusVRBackpack": {
+                    "$path": "."
+                }
+            },
+            "TestLoader": {
+                "$path": "./place/ServerScriptService/TestLoader.server.lua"
+            }
+        }
+    }
+}
