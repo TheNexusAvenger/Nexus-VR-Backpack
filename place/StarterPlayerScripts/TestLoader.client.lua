@@ -6,7 +6,6 @@ Loads Nexus VR Backpack on the client for testing.
 
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
-local GuiService = game:GetService("GuiService")
 local UserInputService = game:GetService("UserInputService")
 
 
@@ -27,13 +26,21 @@ else
     ToolGrid.AdornFrame.Size = UDim2.new(0.2, 0, 0.2, 0)
     ToolGrid.AdornFrame.SizeConstraint = Enum.SizeConstraint.RelativeYY
 
+    local Inventory = require(game.ReplicatedStorage.NexusVRBackpack.State.Inventory).new()
+    while not Players.LocalPlayer.Character do task.wait() end
+    Inventory:AddContainer(Players.LocalPlayer.Character)
+    Inventory:AddContainer(Players.LocalPlayer:WaitForChild("Backpack"))
+    Inventory.ToolsChanged:Connect(function()
+        ToolGrid:SetTools(Inventory.Tools)
+    end)
+    ToolGrid:SetTools(Inventory.Tools)
+
     --Update the input.
     while true do
         local MouseLocation = UserInputService:GetMouseLocation() - game:GetService("GuiService"):GetGuiInset()
         local RelativeX = ((MouseLocation.X - ToolGrid.AdornFrame.AbsolutePosition.X) / ToolGrid.AdornFrame.AbsoluteSize.X)
         local RelativeY = ((MouseLocation.Y - ToolGrid.AdornFrame.AbsolutePosition.Y) / ToolGrid.AdornFrame.AbsoluteSize.Y)
         ToolGrid:UpdateFocusedIcon(RelativeX, RelativeY)
-        ToolGrid:SetTools(game:GetService("Players").LocalPlayer:WaitForChild("Backpack"):GetChildren())
         task.wait()
     end
 end
