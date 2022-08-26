@@ -30,6 +30,7 @@ function ToolIcon.new(Parent: GuiObject, PositionX: number, PositionY: number)
     Background.Size = UDim2.new(0.9, 0, 0.9, 0)
     Background.Position = UDim2.new(self.RelativePositionX, 0, self.RelativePositionY, 0)
     Background.Image = "http://www.roblox.com/asset/?id=10708006436"
+    Background.Name = self.RelativePositionX..","..self.RelativePositionY
     Background.ImageColor3 = Color3.new(0.1, 0.1, 0.1)
     Background.ImageTransparency = 0.8
     Background.Parent = Parent
@@ -88,7 +89,7 @@ function ToolIcon:UpdateColor(): nil
     --Determine the color, transparency, and size.
     local Color = Color3.new(0.1, 0.1, 0.1)
     local Transparency = (self.Tool and 0.5 or 0.8)
-    local Size = ((self.Tool and self.Focused and UDim2.new(1.1, 0, 1.1, 0)) or UDim2.new(0.9, 0, 0.9, 0))
+    local Size = ((self.Tool and self.Focused and UDim2.new(1.05, 0, 1.05, 0)) or UDim2.new(0.9, 0, 0.9, 0))
     if self.Tool then
         if self.Players.LocalPlayer.Character and self.Players.LocalPlayer.Character == self.Tool.Parent then
             if self.Focused then
@@ -115,6 +116,8 @@ end
 Sets the tool for the icon.
 --]]
 function ToolIcon:SetTool(Tool: Tool): nil
+    if Tool == self.Tool then return end
+
     --Disconnect the tool events.
     self.Tool = Tool
     if self.ToolEvents then
@@ -123,6 +126,7 @@ function ToolIcon:SetTool(Tool: Tool): nil
         end
         self.ToolEvents = nil
     end
+    self:UpdateColor()
     if not Tool then return end
 
     --Connect the tool events.
@@ -131,7 +135,6 @@ function ToolIcon:SetTool(Tool: Tool): nil
         if PropertyName ~= "Name" and PropertyName ~= "TextureId" and PropertyName ~= "Parent" then return end
         self:UpdateColor()
     end))
-    self:UpdateColor()
 end
 
 --[[
