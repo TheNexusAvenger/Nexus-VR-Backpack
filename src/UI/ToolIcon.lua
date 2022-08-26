@@ -30,7 +30,6 @@ function ToolIcon.new(Parent: GuiObject, PositionX: number, PositionY: number)
     Background.Size = UDim2.new(0.9, 0, 0.9, 0)
     Background.Position = UDim2.new(self.RelativePositionX, 0, self.RelativePositionY, 0)
     Background.Image = "http://www.roblox.com/asset/?id=10708006436"
-    Background.Name = self.RelativePositionX..","..self.RelativePositionY
     Background.ImageColor3 = Color3.new(0.1, 0.1, 0.1)
     Background.ImageTransparency = 0.8
     Background.Parent = Parent
