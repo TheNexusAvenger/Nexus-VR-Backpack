@@ -23,6 +23,7 @@ for i = 1, TOTAL_TEST_TOOLS do
 
     local TestHandle = Instance.new("Part")
     TestHandle.BrickColor = BrickColor.random()
+    TestHandle.Size = Vector3.new(1, 1, 1)
     TestHandle.Name = "Handle"
     TestHandle.CanCollide = false
     TestHandle.Parent = TestTool

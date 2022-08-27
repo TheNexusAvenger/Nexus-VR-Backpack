@@ -4,6 +4,8 @@ TheNexusAvenger
 Class for the backpack in 3D space.
 --]]
 
+local UI_PHYSICAL_SCALE = 0.5
+
 local TweenService = game:GetService("TweenService")
 
 local ToolGrid = require(script.Parent:WaitForChild("ToolGrid"))
@@ -26,6 +28,7 @@ function Backpack3D.new(Parent: GuiObject, Containers: {Instance})
 
     --Create the adornment.
     local SurfaceGui = Instance.new("SurfaceGui")
+    SurfaceGui.Name = "NexusVRBackpack"
     SurfaceGui.AlwaysOnTop = true
     SurfaceGui.Enabled = false
     SurfaceGui.LightInfluence = 0
@@ -87,7 +90,7 @@ function Backpack3D:UpdateInventory(): nil
     --Update the size.
     local Diameter = (#self.ToolGrid.IconGroups * 2) + 1
     local DiameterScaled = Diameter * (math.sqrt(3) / 2)
-    self.Part.Size = Vector3.new(DiameterScaled, DiameterScaled, 0)
+    self.Part.Size = Vector3.new(DiameterScaled * UI_PHYSICAL_SCALE, DiameterScaled * UI_PHYSICAL_SCALE, 0)
     self.CenterFrame.Size = UDim2.new(1 / DiameterScaled, 0, 1 / DiameterScaled, 0)
 end
 
