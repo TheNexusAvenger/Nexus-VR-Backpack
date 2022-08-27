@@ -11,6 +11,9 @@
             },
             "TestLoader": {
                 "$path": "./place/ServerScriptService/TestLoader.server.lua"
+            },
+            "NexusVRCharacterModelLoader": {
+                "$path": "./place/ServerScriptService/NexusVRCharacterModelLoader.server.lua"
             }
         },
         "StarterPlayer": {
