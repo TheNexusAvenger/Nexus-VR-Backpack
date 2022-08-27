@@ -39,8 +39,8 @@ function CharacterBackpack.new(Character: Model)
     self.Backpack = Backpack3D.new(self.Player:WaitForChild("PlayerGui"), {Character, self.Player:WaitForChild("Backpack")})
 
     --Connect the interact events.
-    table.insert(self.Events, UserInputService.InputBegan:Connect(function(Input, Processed)
-        if Processed then return end
+    table.insert(self.Events, UserInputService.InputBegan:Connect(function(Input)
+        if UserInputService:GetFocusedTextBox() then return end
         if Input.KeyCode ~= self.KeyCode then return end
         self:Open()
     end))
