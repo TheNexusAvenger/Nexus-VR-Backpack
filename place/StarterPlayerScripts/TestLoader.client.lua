@@ -40,7 +40,7 @@ if not UserInputService.VREnabled then
         --The following is long because the API to test with is in world space.
         --Since the backpack is a SurfaceGui in 3D space, this is required to translate the mouse into 3D space relative to the backpack.
         local BackpackSize = self.Backpack.Part.Size
-        local BackpackCFrame = Workspace.CurrentCamera.CFrame * CFrame.new(0, 0, -4)
+        local BackpackCFrame = Workspace.CurrentCamera.CFrame * CFrame.new(0, 0, -2)
         local MouseLocation = UserInputService:GetMouseLocation() - GuiService:GetGuiInset()
         local UpperLeftCorner = Workspace.CurrentCamera:WorldToScreenPoint((BackpackCFrame * CFrame.new(-BackpackSize.X / 2, BackpackSize.Y / 2, 0)).Position)
         local BottomRightCorner = Workspace.CurrentCamera:WorldToScreenPoint((BackpackCFrame * CFrame.new(BackpackSize.X / 2, -BackpackSize.Y / 2, 0)).Position)

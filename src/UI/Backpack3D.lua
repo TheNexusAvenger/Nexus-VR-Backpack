@@ -124,7 +124,7 @@ Updates the focused tool in world space.
 function Backpack3D:UpdateFocusedToolWorldSpace(Position: Vector3): nil
     local RelativeCFrame = self.Part.CFrame:Inverse() * CFrame.new(Position)
     local Size = self.Part.Size
-    self:UpdateFocusedToolLocalSpace((RelativeCFrame.X / (Size.X * 2)) + 0.5, 0.5 - (RelativeCFrame.Y / (Size.Y * 2)))
+    self:UpdateFocusedToolLocalSpace((RelativeCFrame.X / Size.X) + 0.5, 0.5 - (RelativeCFrame.Y / Size.Y))
 end
 
 --[[
