@@ -42,6 +42,7 @@ function CharacterBackpack.new(Character: Model)
     table.insert(self.Events, UserInputService.InputBegan:Connect(function(Input)
         if UserInputService:GetFocusedTextBox() then return end
         if Input.KeyCode ~= self.KeyCode then return end
+        if #self.Backpack.Inventory.Tools == 0 then return end
         self:Open()
     end))
     table.insert(self.Events, UserInputService.InputEnded:Connect(function(Input)
