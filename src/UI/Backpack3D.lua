@@ -7,6 +7,7 @@ Class for the backpack in 3D space.
 local UI_PHYSICAL_SCALE = 0.5
 
 local TweenService = game:GetService("TweenService")
+local VRService = game:GetService("VRService")
 
 local ToolGrid = require(script.Parent:WaitForChild("ToolGrid"))
 local Inventory = require(script.Parent.Parent:WaitForChild("State"):WaitForChild("Inventory"))
@@ -55,6 +56,17 @@ function Backpack3D.new(Parent: GuiObject, Containers: {Instance})
     CenterFrame.Parent = SurfaceGui
     self.CenterFrame = CenterFrame
 
+    local Cursor = Instance.new("Frame")
+    Cursor.BackgroundColor3 = Color3.new(1, 1, 1)
+    Cursor.Size = UDim2.new(0.1, 0, 0.1, 0)
+    Cursor.AnchorPoint = Vector2.new(0.5, 0.5)
+    Cursor.Parent = CenterFrame
+    self.Cursor = Cursor
+
+    local UICorner = Instance.new("UICorner")
+    UICorner.CornerRadius = UDim.new(1, 0)
+    UICorner.Parent = Cursor
+
     --Create the tool grid.
     local BackpackToolGrid = ToolGrid.new()
     BackpackToolGrid.AdornFrame.Size = UDim2.new(0, 0, 0, 0)
@@ -99,8 +111,11 @@ Updates the focused tool in local space.
 --]]
 function Backpack3D:UpdateFocusedToolLocalSpace(RelativeX: number, RelativeY: number): nil
     if not self.Opened then return end
-    local GridRadius = #self.ToolGrid.IconGroups
-    self.ToolGrid:UpdateFocusedIcon((RelativeX * ((GridRadius * 2) + 1)) - GridRadius, (RelativeY * ((GridRadius * 2) + 1)) - GridRadius)
+    local SurfaceGuiPositionX, SurfaceGuiPositionY = self.SurfaceGui.AbsoluteSize.X * RelativeX, self.SurfaceGui.AbsoluteSize.Y * RelativeY
+    local GridX = (SurfaceGuiPositionX - self.CenterFrame.AbsolutePosition.X) / self.CenterFrame.AbsoluteSize.X
+    local GridY = (SurfaceGuiPositionY - self.CenterFrame.AbsolutePosition.Y) / self.CenterFrame.AbsoluteSize.Y
+    self.Cursor.Position = UDim2.new(GridX, 0, GridY, 0)
+    self.ToolGrid:UpdateFocusedIcon(GridX, GridY)
 end
 
 --[[
@@ -109,7 +124,7 @@ Updates the focused tool in world space.
 function Backpack3D:UpdateFocusedToolWorldSpace(Position: Vector3): nil
     local RelativeCFrame = self.Part.CFrame:Inverse() * CFrame.new(Position)
     local Size = self.Part.Size
-    self:UpdateFocusedToolLocalSpace((RelativeCFrame.X / Size.X) + 0.5, 0.5 - (RelativeCFrame.Y / Size.Y))
+    self:UpdateFocusedToolLocalSpace((RelativeCFrame.X / (Size.X * 2)) + 0.5, 0.5 - (RelativeCFrame.Y / (Size.Y * 2)))
 end
 
 --[[
