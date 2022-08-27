@@ -60,6 +60,7 @@ function Backpack3D.new(Parent: GuiObject, Containers: {Instance})
     Cursor.BackgroundColor3 = Color3.new(1, 1, 1)
     Cursor.Size = UDim2.new(0.1, 0, 0.1, 0)
     Cursor.AnchorPoint = Vector2.new(0.5, 0.5)
+    Cursor.ZIndex = 10
     Cursor.Parent = CenterFrame
     self.Cursor = Cursor
 

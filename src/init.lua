@@ -39,7 +39,13 @@ Loads Nexus VR Backpack.
 --]]
 function NexusVRBackpack:Load()
     --Disable the default backpack.
-    StarterGui:SetCoreGuiEnabled(Enum.CoreGuiType.Backpack, false)
+    --Done in a loop in case the game tries to enable the default backpack.
+    task.spawn(function()
+        while true do
+            StarterGui:SetCoreGuiEnabled(Enum.CoreGuiType.Backpack, false)
+            task.wait(0.1)
+        end
+    end)
 
     --Set up the backpacks.
     Players.LocalPlayer.CharacterAdded:Connect(function()
