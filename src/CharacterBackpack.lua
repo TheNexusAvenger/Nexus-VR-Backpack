@@ -111,7 +111,7 @@ function CharacterBackpack:Open(): nil
     if self.Backpack.Opened then return end
     self.Backpack:Open()
     if self.NexusVRCharacterModelControllerApi then
-        self.NexusVRCharacterModelControllerApi:DisableControllerInput(Enum.UserCFrame.RightHand)
+        self.NexusVRCharacterModelControllerApi:DisableControllerInput(self.UserCFrame)
     end
 
     --Update the position and focus until it is closed.
@@ -143,7 +143,7 @@ function CharacterBackpack:Close(): nil
     --Close the backpack.
     self.Backpack:Close()
     if self.NexusVRCharacterModelControllerApi then
-        self.NexusVRCharacterModelControllerApi:EnableControllerInput(Enum.UserCFrame.RightHand)
+        self.NexusVRCharacterModelControllerApi:EnableControllerInput(self.UserCFrame)
     end
 end
 
