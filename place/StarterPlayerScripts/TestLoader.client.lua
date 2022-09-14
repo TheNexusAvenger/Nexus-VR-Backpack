@@ -18,20 +18,6 @@ local NexusVRBackpack = require(ReplicatedStorage:WaitForChild("NexusVRBackpack"
 if not UserInputService.VREnabled then
     --Modify the CharacterBackpack for non-VR testing.
     local CharacterBackpack = require(ReplicatedStorage:WaitForChild("NexusVRBackpack"):WaitForChild("CharacterBackpack"))
-    local OriginalCharacterBackpackConstructor = CharacterBackpack.new
-    CharacterBackpack.new = function(Character)
-        --Create the backpack.
-        local Backpack = OriginalCharacterBackpackConstructor(Character)
-
-        --Continuously put it at the center of the view.
-        table.insert(Backpack.Events, RunService.RenderStepped:Connect(function()
-            Backpack.Backpack:MoveTo(Backpack:GetBackpackCFrame())
-        end))
-
-        --Return the backpack.
-        return Backpack
-    end
-
     CharacterBackpack.GetBackpackCFrame = function(self)
         return Workspace.CurrentCamera.CFrame * CFrame.new(0, 0, -2)
     end

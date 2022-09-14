@@ -4,6 +4,7 @@ TheNexusAvenger
 Backpack associated with a character.
 --]]
 
+local VRService = game:GetService("VRService")
 local Workspace = game:GetService("Workspace")
 local Players = game:GetService("Players")
 local RunService = game:GetService("RunService")
@@ -108,14 +109,15 @@ function CharacterBackpack:Open(): nil
     --Open the backpack.
     if not self.Enabled then return end
     if self.Backpack.Opened then return end
-    self.Backpack:MoveTo(self:GetBackpackCFrame())
     self.Backpack:Open()
     if self.NexusVRCharacterModelControllerApi then
         self.NexusVRCharacterModelControllerApi:DisableControllerInput(Enum.UserCFrame.RightHand)
     end
 
-    --Update the focus until it is closed.
+    --Update the position and focus until it is closed.
+    local OriginOffset = (Workspace.CurrentCamera:GetRenderCFrame() * VRService:GetUserCFrame(Enum.UserCFrame.Head):Inverse()):Inverse() * self:GetBackpackCFrame()
     self.UpdateFocusEvent = RunService.RenderStepped:Connect(function()
+        self.Backpack:MoveTo(Workspace.CurrentCamera:GetRenderCFrame() * VRService:GetUserCFrame(Enum.UserCFrame.Head):Inverse() * OriginOffset)
         self.Backpack:UpdateFocusedToolWorldSpace(self:GetHandPosition())
     end)
 end
