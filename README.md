@@ -4,8 +4,8 @@ backpack user interface for VR players. It is intended
 to be used with [Nexus VR Character Model](https://github.com/TheNexusAvenger/Nexus-VR-Character-Model),
 but can be used without it.
 
-# Setup
-## Nexus VR Character Model Loader
+## Setup
+### Nexus VR Character Model Loader
 With Nexus VR Character Model V.2.4.0 and later, Nexus
 VR Character Model is able to loaded with either the
 default configuration. In the [loader for Nexus VR Character Model](https://github.com/TheNexusAvenger/Nexus-VR-Character-Model/blob/master/NexusVRCharacterModelLoader.server.lua),
@@ -14,7 +14,7 @@ be set to `true`. By default, this is enabled for
 the V.2.4.0 loader. Previous loaders will not have this
 property and will default to be disabled unless added.
 
-## Manual
+### Manual
 Nexus VR Backpack can be used with or without Nexus
 VR Character Model. Nexus VR Character Model will
 include Nexus VR Backpack if it is set to load. Otherwise,
@@ -31,17 +31,28 @@ to be called.
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local NexusVRBackpack = require(ReplicatedStorage:WaitForChild("NexusVRBackpack"))
 NexusVRBackpack:Load()
+```
 
---Optional - Changes the key to open the backpack from the Right Thumbstick.
+## API
+Nexus VR Backpack exposes a couple functions for manipulating
+the backpack.
+
+```lua
+--References the API.
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local NexusVRBackpack = require(ReplicatedStorage:WaitForChild("NexusVRCharacterModel")).Api:WaitFor("Backpack") --Nexus VR Character Model V.2.4.0 or newer only.
+local NexusVRBackpack = require(ReplicatedStorage:WaitForChild("NexusVRBackpack")) --Any version of Nexus VR Character Model (including V.2.4.0 or later) or no version at all.
+
+--Changes the key to open the backpack from the Right Thumbstick.
 NexusVRBackpack:SetKeyCode(Enum.KeyCode.X)
 
---Optional - Changes the UserCFrame the backpack will open at from the Right Hand.
+--Changes the UserCFrame the backpack will open at from the Right Hand.
 NexusVRBackpack:SetUserCFrame((Enum.UserCFrame.Left)
 
---Optional - Enables or disables the backpack.
+--Enables or disables the backpack.
 NexusVRBackpack:SetBackpackEnabled(false)
 
---Optional - Returns if the backpack is enabled or not.
+--Returns if the backpack is enabled or not.
 print(NexusVRBackpack:GetBackpackEnabled())
 ```
 
