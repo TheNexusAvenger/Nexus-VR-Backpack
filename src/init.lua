@@ -11,6 +11,7 @@ local StarterGui = game:GetService("StarterGui")
 local CharacterBackpack = require(script:WaitForChild("CharacterBackpack"))
 
 local NexusVRBackpack = {}
+NexusVRBackpack.Enabled = true
 
 
 
@@ -27,6 +28,7 @@ function NexusVRBackpack:CreateBackpack()
     --Create the new backpack.
     if not Players.LocalPlayer.Character then return end
     self.CurrentBackpack = CharacterBackpack.new(Players.LocalPlayer.Character)
+    self.CurrentBackpack.Enabled = self.Enabled
     if self.OverrideKeyCode then
         self.CurrentBackpack:SetKeyCode(self.OverrideKeyCode)
     end
@@ -56,13 +58,44 @@ function NexusVRBackpack:Load()
 
     --Load the Nexus VR Character Model API.
     task.spawn(function()
+        --Get the Nexus VR Character Model API.
         local NexusVRCharacterModel = require(ReplicatedStorage:WaitForChild("NexusVRCharacterModel", 10 ^ 99))
         if not NexusVRCharacterModel.Api then
             warn("Nexus VR Character Model is loaded by no API is found. This was added in V.2.4.0. Inputs on the right controller won't be disabled when interacting with the backpack.")
             return
         end
         CharacterBackpack.NexusVRCharacterModelControllerApi = NexusVRCharacterModel.Api:WaitFor("Controller")
+
+        --Add the Nexus VR Backpack API.
+        NexusVRCharacterModel.Api:Register("Backpack", {
+            SetKeyCode = function(_, KeyCode: Enum.KeyCode): nil
+                self:SetKeyCode(KeyCode)
+            end,
+            SetUserCFrame = function(_, UserCFrame: Enum.KeyCode): nil
+                self:SetUserCFrame(UserCFrame)
+            end,
+        })
     end)
+end
+
+--[[
+Returns if the backpack is enabled or disabled.
+--]]
+function NexusVRBackpack:GetBackpackEnabled(): boolean
+    return self.Enabled
+end
+
+--[[
+Sets the backpack as enabled or disabled.
+--]]
+function NexusVRBackpack:SetBackpackEnabled(Enabled: boolean): nil
+    self.Enabled = (Enabled ~= false)
+    if self.CurrentBackpack then
+        self.CurrentBackpack.Enabled = self.Enabled
+        if not self.Enabled then
+            self.CurrentBackpack:Close()
+        end
+    end
 end
 
 --[[

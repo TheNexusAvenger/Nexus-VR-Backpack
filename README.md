@@ -37,6 +37,12 @@ NexusVRBackpack:SetKeyCode(Enum.KeyCode.X)
 
 --Optional - Changes the UserCFrame the backpack will open at from the Right Hand.
 NexusVRBackpack:SetUserCFrame((Enum.UserCFrame.Left)
+
+--Optional - Enables or disables the backpack.
+NexusVRBackpack:SetBackpackEnabled(false)
+
+--Optional - Returns if the backpack is enabled or not.
+print(NexusVRBackpack:GetBackpackEnabled())
 ```
 
 ## Contributing

@@ -30,4 +30,4 @@ for i = 1, TOTAL_TEST_TOOLS do
 end
 
 --Load Nexus VR Backpack.
-require(ServerScriptService:WaitForChild("MainModule"))
+require(ServerScriptService:WaitForChild("MainModule"))()

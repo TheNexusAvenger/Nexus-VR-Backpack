@@ -22,6 +22,7 @@ Creates the character backpack.
 function CharacterBackpack.new(Character: Model)
     --Create the object.
     local self = {
+        Enabled = true,
         Player = Players:GetPlayerFromCharacter(Character),
         UserCFrame = Enum.UserCFrame.RightHand,
         Events = {},
@@ -105,6 +106,7 @@ Opens the backpack.
 --]]
 function CharacterBackpack:Open(): nil
     --Open the backpack.
+    if not self.Enabled then return end
     if self.Backpack.Opened then return end
     self.Backpack:MoveTo(self:GetBackpackCFrame())
     self.Backpack:Open()
@@ -144,7 +146,7 @@ function CharacterBackpack:Close(): nil
 end
 
 --[[
-Destroys the backpack/
+Destroys the backpack.
 --]]
 function CharacterBackpack:Destroy()
     --Disconnect the events.
