@@ -5,6 +5,7 @@ Main module and API for Nexus VR Backpack.
 --]]
 
 local Players = game:GetService("Players")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local StarterGui = game:GetService("StarterGui")
 
 local CharacterBackpack = require(script:WaitForChild("CharacterBackpack"))
@@ -52,6 +53,16 @@ function NexusVRBackpack:Load()
         self:CreateBackpack()
     end)
     self:CreateBackpack()
+
+    --Load the Nexus VR Character Model API.
+    task.spawn(function()
+        local NexusVRCharacterModel = require(ReplicatedStorage:WaitForChild("NexusVRCharacterModel", 10 ^ 99))
+        if not NexusVRCharacterModel.Api then
+            warn("Nexus VR Character Model is loaded by no API is found. This was added in V.2.4.0. Inputs on the right controller won't be disabled when interacting with the backpack.")
+            return
+        end
+        CharacterBackpack.NexusVRCharacterModelControllerApi = NexusVRCharacterModel.Api:WaitFor("Controller")
+    end)
 end
 
 --[[

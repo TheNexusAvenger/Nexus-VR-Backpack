@@ -108,6 +108,9 @@ function CharacterBackpack:Open(): nil
     if self.Backpack.Opened then return end
     self.Backpack:MoveTo(self:GetBackpackCFrame())
     self.Backpack:Open()
+    if self.NexusVRCharacterModelControllerApi then
+        self.NexusVRCharacterModelControllerApi:DisableControllerInput(Enum.UserCFrame.RightHand)
+    end
 
     --Update the focus until it is closed.
     self.UpdateFocusEvent = RunService.RenderStepped:Connect(function()
@@ -135,6 +138,9 @@ function CharacterBackpack:Close(): nil
 
     --Close the backpack.
     self.Backpack:Close()
+    if self.NexusVRCharacterModelControllerApi then
+        self.NexusVRCharacterModelControllerApi:EnableControllerInput(Enum.UserCFrame.RightHand)
+    end
 end
 
 --[[
