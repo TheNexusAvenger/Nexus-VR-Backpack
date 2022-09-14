@@ -8,7 +8,7 @@ but can be used without it.
 ## Nexus VR Character Model Loader
 With Nexus VR Character Model V.2.4.0 and later, Nexus
 VR Character Model is able to loaded with either the
-default configuration. In the [loader for Nexus VR Character Model(https://github.com/TheNexusAvenger/Nexus-VR-Character-Model/blob/master/NexusVRCharacterModelLoader.server.lua),
+default configuration. In the [loader for Nexus VR Character Model](https://github.com/TheNexusAvenger/Nexus-VR-Character-Model/blob/master/NexusVRCharacterModelLoader.server.lua),
 the value of `NexusVRBackpackEnabled` under `Extra` must
 be set to `true`. By default, this is enabled for
 the V.2.4.0 loader. Previous loaders will not have this
