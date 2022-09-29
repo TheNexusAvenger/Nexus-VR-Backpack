@@ -45,8 +45,10 @@ function NexusVRBackpack:Load()
     --Done in a loop in case the game tries to enable the default backpack.
     task.spawn(function()
         while true do
-            StarterGui:SetCoreGuiEnabled(Enum.CoreGuiType.Backpack, false)
-            task.wait(0.1)
+            if StarterGui:GetCoreGuiEnabled(Enum.CoreGuiType.Backpack) then
+                StarterGui:SetCoreGuiEnabled(Enum.CoreGuiType.Backpack, false)
+            end
+            task.wait()
         end
     end)
 
