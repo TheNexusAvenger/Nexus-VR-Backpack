@@ -3,16 +3,25 @@ TheNexusAvenger
 
 Class for a tool icon.
 --]]
+--!strict
 
 local ToolIcon = {}
 ToolIcon.__index = ToolIcon
+
+export type ToolIcon = {
+    new: (Parent: GuiObject, PositionX: number, PositionY: number) -> (ToolIcon),
+
+    SetTool: (self: ToolIcon, Tool: BackpackItem) -> (),
+    SetFocused: (self: ToolIcon, Focused: boolean) -> (),
+    Destroy: (self: ToolIcon) -> (),
+}
 
 
 
 --[[
 Creates the tool icon.
 --]]
-function ToolIcon.new(Parent: GuiObject, PositionX: number, PositionY: number)
+function ToolIcon.new(Parent: GuiObject, PositionX: number, PositionY: number): ToolIcon
     --Create the object.
     local self = {
         Focused = false,
@@ -62,13 +71,13 @@ function ToolIcon.new(Parent: GuiObject, PositionX: number, PositionY: number)
     self.ToolImage = ToolImage
 
     --Return the object.
-    return self
+    return (self :: any) :: ToolIcon
 end
 
 --[[
 Updates the color of the icon.
 --]]
-function ToolIcon:UpdateColor(): nil
+function ToolIcon:UpdateColor(): ()
     --Update the text and icon.
     if self.Tool then
         if self.Tool.TextureId == "" then
@@ -114,8 +123,8 @@ end
 --[[
 Sets the tool for the icon.
 --]]
-function ToolIcon:SetTool(Tool: Tool): nil
-    if Tool == self.Tool then return end
+function ToolIcon:SetTool(Tool: BackpackItem): ()
+    if Tool == (self.Tool :: any) then return end
 
     --Disconnect the tool events.
     self.Tool = Tool
@@ -129,8 +138,8 @@ function ToolIcon:SetTool(Tool: Tool): nil
     if not Tool then return end
 
     --Connect the tool events.
-    self.ToolEvents = {}
-    table.insert(self.ToolEvents, Tool.Changed:Connect(function(PropertyName)
+    self.ToolEvents = {} :: any
+    table.insert(self.ToolEvents :: any, Tool.Changed:Connect(function(PropertyName)
         if PropertyName ~= "Name" and PropertyName ~= "TextureId" and PropertyName ~= "Parent" then return end
         self:UpdateColor()
     end))
@@ -139,7 +148,7 @@ end
 --[[
 Sets the icon as focused.
 --]]
-function ToolIcon:SetFocused(Focused: boolean): nil
+function ToolIcon:SetFocused(Focused: boolean): ()
     self.Focused = Focused
     self:UpdateColor()
 end
@@ -147,7 +156,7 @@ end
 --[[
 Destroys the tool icon.
 --]]
-function ToolIcon:Destroy()
+function ToolIcon:Destroy(): ()
     self.Background:Destroy()
     if self.ToolEvents then
         for _, Event in self.ToolEvents do
@@ -159,4 +168,4 @@ end
 
 
 
-return ToolIcon
+return (ToolIcon :: any) :: ToolIcon

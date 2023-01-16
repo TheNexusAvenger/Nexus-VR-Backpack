@@ -3,18 +3,29 @@ TheNexusAvenger
 
 Hexagon grid for showing tools.
 --]]
+--!strict
 
 local ToolIcon = require(script.Parent:WaitForChild("ToolIcon"))
 
 local ToolGrid = {}
 ToolGrid.__index = ToolGrid
 
+export type ToolGrid = {
+    new: () -> (ToolGrid),
+
+    AdornFrame: Frame,
+    IconGroups: {{any}},
+    SetTools: (self: ToolGrid, Tools: {BackpackItem}) -> (),
+    UpdateFocusedIcon: (self: ToolGrid, RelativePositionX: number, RelativePositionY: number) -> (),
+    Destroy: (self: ToolGrid) -> (),
+}
+
 
 
 --[[
 Creates the tool grid.
 --]]
-function ToolGrid.new()
+function ToolGrid.new(): ToolGrid
     --Create the object.
     local self = {
         IconGroups = {}
@@ -29,7 +40,7 @@ function ToolGrid.new()
     self.AdornFrame = AdornFrame
 
     --Return the object.
-    return self
+    return (self :: any) :: ToolGrid
 end
 
 --[[
@@ -42,7 +53,7 @@ end
 --[[
 Sets the radius of the grid.
 --]]
-function ToolGrid:SetRadius(Radius: number)
+function ToolGrid:SetRadius(Radius: number): ()
     Radius = math.max(1, Radius)
     if Radius == #self.IconGroups then return end
 
@@ -92,7 +103,7 @@ end
 --[[
 Sets the tools for the grid to show.
 --]]
-function ToolGrid:SetTools(Tools: {Tool}): nil
+function ToolGrid:SetTools(Tools: {BackpackItem}): ()
     --Update the radius.
     local MinimumRadius = 1
     local OpenSlots = 6
@@ -115,7 +126,7 @@ end
 --[[
 Updates the icon that is focused.
 --]]
-function ToolGrid:UpdateFocusedIcon(RelativePositionX: number, RelativePositionY: number)
+function ToolGrid:UpdateFocusedIcon(RelativePositionX: number, RelativePositionY: number): ()
     --Determine the new focused icon.
     local NewFocusedIcon = nil
     local DistanceToFocusedIcon = 0.5
@@ -156,4 +167,4 @@ end
 
 
 
-return ToolGrid
+return (ToolGrid :: any) :: ToolGrid

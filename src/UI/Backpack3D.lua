@@ -3,11 +3,11 @@ TheNexusAvenger
 
 Class for the backpack in 3D space.
 --]]
+--!strict
 
 local UI_PHYSICAL_SCALE = 0.5
 
 local TweenService = game:GetService("TweenService")
-local VRService = game:GetService("VRService")
 
 local ToolGrid = require(script.Parent:WaitForChild("ToolGrid"))
 local Inventory = require(script.Parent.Parent:WaitForChild("State"):WaitForChild("Inventory"))
@@ -15,12 +15,25 @@ local Inventory = require(script.Parent.Parent:WaitForChild("State"):WaitForChil
 local Backpack3D = {}
 Backpack3D.__index = Backpack3D
 
+export type Backpack3D = {
+    new: (Parent: GuiObject, Containers: {Instance}) -> (Backpack3D),
+
+    Opened: boolean,
+    Inventory: Inventory.Inventory,
+    GetFocusedTool: (self: Backpack3D) -> (BackpackItem?),
+    UpdateFocusedToolWorldSpace: (self: Backpack3D, Position: Vector3) -> (),
+    MoveTo: (self: Backpack3D, Location: CFrame) -> (),
+    Open: (self: Backpack3D) -> (),
+    Close: (self: Backpack3D) -> (),
+    Destroy: (self: Backpack3D) -> (),
+}
+
 
 
 --[[
 Creates the 3D backpack.
 --]]
-function Backpack3D.new(Parent: GuiObject, Containers: {Instance})
+function Backpack3D.new(Parent: GuiObject, Containers: {Instance}): Backpack3D
     --Create the object.
     local self = {
         Opened = false,
@@ -83,20 +96,20 @@ function Backpack3D.new(Parent: GuiObject, Containers: {Instance})
     self:UpdateInventory()
 
     --Return the object.
-    return self
+    return (self :: any) :: Backpack3D
 end
 
 --[[
 Returns the focused tool, if any.
 --]]
-function Backpack3D:GetFocusedTool(): Tool?
+function Backpack3D:GetFocusedTool(): BackpackItem?
     return self.ToolGrid.FocusedIcon and self.ToolGrid.FocusedIcon.Tool
 end
 
 --[[
 Updates the backpack when the tools change.
 --]]
-function Backpack3D:UpdateInventory(): nil
+function Backpack3D:UpdateInventory(): ()
     --Update the tools.
     self.ToolGrid:SetTools(self.Inventory.Tools)
 
@@ -110,9 +123,9 @@ end
 --[[
 Updates the focused tool in local space.
 --]]
-function Backpack3D:UpdateFocusedToolLocalSpace(RelativeX: number, RelativeY: number): nil
+function Backpack3D:UpdateFocusedToolLocalSpace(RelativeX: number, RelativeY: number): ()
     if not self.Opened then return end
-    local SurfaceGuiPositionX, SurfaceGuiPositionY = self.SurfaceGui.AbsoluteSize.X * RelativeX, self.SurfaceGui.AbsoluteSize.Y * RelativeY
+    local SurfaceGuiPositionX, SurfaceGuiPositionY = (self.SurfaceGui :: SurfaceGui).AbsoluteSize.X * RelativeX, (self.SurfaceGui :: SurfaceGui).AbsoluteSize.Y * RelativeY
     local GridX = (SurfaceGuiPositionX - self.CenterFrame.AbsolutePosition.X) / self.CenterFrame.AbsoluteSize.X
     local GridY = (SurfaceGuiPositionY - self.CenterFrame.AbsolutePosition.Y) / self.CenterFrame.AbsoluteSize.Y
     self.Cursor.Position = UDim2.new(GridX, 0, GridY, 0)
@@ -122,8 +135,8 @@ end
 --[[
 Updates the focused tool in world space.
 --]]
-function Backpack3D:UpdateFocusedToolWorldSpace(Position: Vector3): nil
-    local RelativeCFrame = self.Part.CFrame:Inverse() * CFrame.new(Position)
+function Backpack3D:UpdateFocusedToolWorldSpace(Position: Vector3): ()
+    local RelativeCFrame = (self.Part :: Part).CFrame:Inverse() * CFrame.new(Position)
     local Size = self.Part.Size
     self:UpdateFocusedToolLocalSpace((RelativeCFrame.X / Size.X) + 0.5, 0.5 - (RelativeCFrame.Y / Size.Y))
 end
@@ -131,14 +144,14 @@ end
 --[[
 Moves the backpack to the specified CFrame.
 --]]
-function Backpack3D:MoveTo(Location: CFrame)
+function Backpack3D:MoveTo(Location: CFrame): ()
     self.Part.CFrame = Location
 end
 
 --[[
 Opens the backpack.
 --]]
-function Backpack3D:Open()
+function Backpack3D:Open(): ()
     if self.Opened then return end
     self.Opened = true
     self.SurfaceGui.Enabled = true
@@ -150,7 +163,7 @@ end
 --[[
 Closes the backpack.
 --]]
-function Backpack3D:Close()
+function Backpack3D:Close(): ()
     if not self.Opened then return end
     self:UpdateFocusedToolLocalSpace(math.huge, math.huge)
     self.Opened = false
@@ -166,7 +179,7 @@ end
 --[[
 Destroys the backpack.
 --]]
-function Backpack3D:Destroy()
+function Backpack3D:Destroy(): ()
     self.SurfaceGui:Destroy()
     self.ToolGrid:Destroy()
     self.Inventory:Destroy()
@@ -174,4 +187,4 @@ end
 
 
 
-return Backpack3D
+return (Backpack3D :: any) :: Backpack3D

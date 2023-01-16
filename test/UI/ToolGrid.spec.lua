@@ -3,6 +3,7 @@ TheNexusAvenger
 
 Tests for the ToolGrid class.
 --]]
+--!strict
 
 local ServerScriptService = game:GetService("ServerScriptService")
 local ToolGrid = require(ServerScriptService:WaitForChild("MainModule"):WaitForChild("NexusVRBackpack"):WaitForChild("UI"):WaitForChild("ToolGrid"))
@@ -11,8 +12,8 @@ return function()
      --Create the test tool grid and mock icon.
      local TestToolGrid = nil
      beforeEach(function()
-        TestToolGrid = ToolGrid.new()
-        TestToolGrid.CreateToolIcon = function(_, X, Y)
+        TestToolGrid = ToolGrid.new() :: any
+        TestToolGrid.CreateToolIcon = function(_, X: number, Y: number)
             return {
                 Position = Vector2.new(X, Y),
                 RelativePositionX = (X * (math.sqrt(3) / 2)) + 0.5,

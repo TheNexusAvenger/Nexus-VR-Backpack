@@ -3,6 +3,7 @@ TheNexusAvenger
 
 Loader for Nexus VR Backpack.
 --]]
+--!strict
 
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 

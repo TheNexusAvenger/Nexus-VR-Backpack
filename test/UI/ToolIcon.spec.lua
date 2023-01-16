@@ -3,6 +3,7 @@ TheNexusAvenger
 
 Tests for the ToolIcon class.
 --]]
+--!strict
 
 local ServerScriptService = game:GetService("ServerScriptService")
 local ToolIcon = require(ServerScriptService:WaitForChild("MainModule"):WaitForChild("NexusVRBackpack"):WaitForChild("UI"):WaitForChild("ToolIcon"))
@@ -11,7 +12,7 @@ return function()
     --Create the test tool icon and mock services.
     local TestToolIcon = nil
     beforeEach(function()
-        TestToolIcon = ToolIcon.new(nil, 0, 0)
+        TestToolIcon = ToolIcon.new(nil :: any, 0, 0) :: any
         TestToolIcon.Players = {
             LocalPlayer = {
                 Character = Instance.new("Model"),

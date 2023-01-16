@@ -58,6 +58,25 @@ local Configuration = {
         --recallibration, and chat.
         MenuToggleGestureActive = true,
     },
+    Output = {
+        --To suppress warnings from Nexus VR Character Model
+        --where supported (missing configuration entries),
+        --the names of the warnings can be added here.
+        --Add "All" to suppress all warnings.
+        SuppressWarnings = {},
+
+        --If true, clients can check the client output to see
+        --if Nexus VR Character Model is loaded. In order for
+        --the message to appear, the client must hold down Ctrl
+        --(left or right) when opening the F9 developer console.
+        AllowClientToOutputLoadedMessage = true,
+    },
+    Extra = {
+        --If true, Nexus VR Backpack (https://github.com/TheNexusAvenger/Nexus-VR-Backpack)
+        --will be inserted into the game and loaded. This replaces
+        --the default Roblox backpack.
+        NexusVRBackpackEnabled = true,
+    },
 }
 
 
@@ -68,7 +87,7 @@ local MainModule = script:FindFirstChild("MainModule")
 if MainModule then
     NexusVRCharacterModelModule = require(MainModule)
 else
-    NexusVRCharacterModelModule = require(6052374981)
+    NexusVRCharacterModelModule = require(10728814921)
 end
 
 --Load Nexus VR Character Model.

@@ -3,6 +3,7 @@ TheNexusAvenger
 
 Tests for the Inventory class.
 --]]
+--!strict
 
 local ServerScriptService = game:GetService("ServerScriptService")
 local Inventory = require(ServerScriptService:WaitForChild("MainModule"):WaitForChild("NexusVRBackpack"):WaitForChild("State"):WaitForChild("Inventory"))
@@ -13,7 +14,7 @@ return function()
     local TestInventory = nil
     local TestTools = {}
     beforeEach(function()
-        TestInventory = Inventory.new()
+        TestInventory = Inventory.new() :: any
         TestInventory.ToolsChanged:Connect(function()
             ToolsChangedEventCalls += 1
         end)
@@ -23,7 +24,6 @@ return function()
     end)
     afterEach(function()
         TestInventory:Destroy()
-        TestInventory = nil
         for _, Tool in TestTools do
             Tool:Destroy()
         end
@@ -136,7 +136,7 @@ return function()
             TestTools[3].Parent = TestModel1
             local TestModel2 = Instance.new("Model")
             TestTools[2].Parent = TestModel2
-            local NewInventory = Inventory.new({TestModel1, TestModel2})
+            local NewInventory = Inventory.new({TestModel1, TestModel2} :: any)
 
             expect(#NewInventory.Tools).to.equal(3)
             expect(NewInventory.Tools[1]).to.equal(TestTools[1])

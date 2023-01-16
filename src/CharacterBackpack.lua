@@ -3,6 +3,7 @@ TheNexusAvenger
 
 Backpack associated with a character.
 --]]
+--!strict
 
 local VRService = game:GetService("VRService")
 local Workspace = game:GetService("Workspace")
@@ -15,16 +16,28 @@ local Backpack3D = require(script.Parent:WaitForChild("UI"):WaitForChild("Backpa
 local CharacterBackpack = {}
 CharacterBackpack.__index = CharacterBackpack
 
+export type CharacterBackpack = {
+    new: (Character: Model) -> (CharacterBackpack),
+
+    Enabled: boolean,
+    SetKeyCode: (self: CharacterBackpack, KeyCode: Enum.KeyCode) -> (),
+    SetUserCFrame: (self: CharacterBackpack, UserCFrame: Enum.UserCFrame) -> (),
+    Open: (self: CharacterBackpack) -> (),
+    Close: (self: CharacterBackpack) -> (),
+    Destroy: (self: CharacterBackpack) -> (),
+}
+
 
 
 --[[
 Creates the character backpack.
 --]]
-function CharacterBackpack.new(Character: Model)
+function CharacterBackpack.new(Character: Model): CharacterBackpack
     --Create the object.
     local self = {
         Enabled = true,
         Player = Players:GetPlayerFromCharacter(Character),
+        KeyCode = Enum.KeyCode.ButtonR3,
         UserCFrame = Enum.UserCFrame.RightHand,
         Events = {},
     }
@@ -53,7 +66,7 @@ function CharacterBackpack.new(Character: Model)
     end))
 
     --Connect the destroy events.
-    table.insert(self.Events, self.Humanoid.Died:Connect(function()
+    table.insert(self.Events, (self :: any).Humanoid.Died:Connect(function()
         self:Destroy()
     end))
     table.insert(self.Events, self.Player.CharacterAdded:Connect(function()
@@ -68,7 +81,7 @@ function CharacterBackpack.new(Character: Model)
     self:SetKeyCode(Enum.KeyCode.ButtonR3)
 
     --Return the object.
-    return self
+    return (self :: any) :: CharacterBackpack
 end
 
 --[[
@@ -88,7 +101,7 @@ end
 --[[
 Sets the key to use for opening and closing the backpack.
 --]]
-function CharacterBackpack:SetKeyCode(KeyCode: Enum.KeyCode): nil
+function CharacterBackpack:SetKeyCode(KeyCode: Enum.KeyCode): ()
     self.KeyCode = KeyCode
     if UserInputService:IsKeyDown(KeyCode) then
         self:Open()
@@ -98,20 +111,21 @@ end
 --[[
 Sets the input to open the menu at.
 --]]
-function CharacterBackpack:SetUserCFrame(UserCFrame: Enum.UserCFrame): nil
+function CharacterBackpack:SetUserCFrame(UserCFrame: Enum.UserCFrame): ()
     self.UserCFrame = UserCFrame
 end
 
 --[[
 Opens the backpack.
 --]]
-function CharacterBackpack:Open(): nil
+function CharacterBackpack:Open(): ()
     --Open the backpack.
     if not self.Enabled then return end
     if self.Backpack.Opened then return end
     self.Backpack:Open()
-    if self.NexusVRCharacterModelControllerApi then
-        self.NexusVRCharacterModelControllerApi:DisableControllerInput(self.UserCFrame)
+    local NexusVRCharacterModelControllerApi = (self :: any).NexusVRCharacterModelControllerApi
+    if NexusVRCharacterModelControllerApi then
+        NexusVRCharacterModelControllerApi:DisableControllerInput(self.UserCFrame)
     end
 
     --Update the position and focus until it is closed.
@@ -125,7 +139,7 @@ end
 --[[
 Closes the backpack.
 --]]
-function CharacterBackpack:Close(): nil
+function CharacterBackpack:Close(): ()
     if not self.Backpack.Opened then return end
 
     --Update the tool.
@@ -135,22 +149,23 @@ function CharacterBackpack:Close(): nil
     end
     local SelectedTool = self.Backpack:GetFocusedTool()
     if SelectedTool then
-        self.Humanoid:EquipTool(SelectedTool)
+        (self.Humanoid :: Humanoid):EquipTool(SelectedTool :: Tool)
     else
-        self.Humanoid:UnequipTools()
+        (self.Humanoid :: Humanoid):UnequipTools()
     end
 
     --Close the backpack.
     self.Backpack:Close()
-    if self.NexusVRCharacterModelControllerApi then
-        self.NexusVRCharacterModelControllerApi:EnableControllerInput(self.UserCFrame)
+    local NexusVRCharacterModelControllerApi = (self :: any).NexusVRCharacterModelControllerApi
+    if NexusVRCharacterModelControllerApi then
+        NexusVRCharacterModelControllerApi:EnableControllerInput(self.UserCFrame)
     end
 end
 
 --[[
 Destroys the backpack.
 --]]
-function CharacterBackpack:Destroy()
+function CharacterBackpack:Destroy(): ()
     --Disconnect the events.
     if self.UpdateFocusEvent then
         self.UpdateFocusEvent:Disconnect()
@@ -173,4 +188,4 @@ function CharacterBackpack:Destroy()
 end
 
 
-return CharacterBackpack
+return (CharacterBackpack :: any) :: CharacterBackpack
