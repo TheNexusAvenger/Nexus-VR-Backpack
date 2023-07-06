@@ -7,7 +7,6 @@ Main module and API for Nexus VR Backpack.
 
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
-local StarterGui = game:GetService("StarterGui")
 
 local CharacterBackpack = require(script:WaitForChild("CharacterBackpack"))
 
@@ -19,7 +18,7 @@ NexusVRBackpack.Enabled = true
 --[[
 Creates a backpack for the current character.
 --]]
-function NexusVRBackpack:CreateBackpack()
+function NexusVRBackpack:CreateBackpack(): ()
     --Clear the existing backpack.
     if self.CurrentBackpack then
         self.CurrentBackpack:Destroy()
@@ -41,18 +40,7 @@ end
 --[[
 Loads Nexus VR Backpack.
 --]]
-function NexusVRBackpack:Load()
-    --Disable the default backpack.
-    --Done in a loop in case the game tries to enable the default backpack.
-    task.spawn(function()
-        while true do
-            if StarterGui:GetCoreGuiEnabled(Enum.CoreGuiType.Backpack) then
-                StarterGui:SetCoreGuiEnabled(Enum.CoreGuiType.Backpack, false)
-            end
-            task.wait()
-        end
-    end)
-
+function NexusVRBackpack:Load(): ()
     --Set up the backpacks.
     Players.LocalPlayer.CharacterAdded:Connect(function()
         self:CreateBackpack()
