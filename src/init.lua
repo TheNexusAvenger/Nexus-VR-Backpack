@@ -59,6 +59,12 @@ function NexusVRBackpack:Load(): ()
 
         --Add the Nexus VR Backpack API.
         NexusVRCharacterModel.Api:Register("Backpack", {
+            GetBackpackEnabled = function(_): boolean
+                return self:GetBackpackEnabled()
+            end,
+            SetBackpackEnabled = function(_, Enabled: boolean): ()
+                self:SetBackpackEnabled(Enabled)
+            end,
             SetKeyCode = function(_, KeyCode: Enum.KeyCode): ()
                 self:SetKeyCode(KeyCode)
             end,
