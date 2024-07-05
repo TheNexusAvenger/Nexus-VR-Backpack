@@ -5,6 +5,11 @@ Backpack associated with a character.
 --]]
 --!strict
 
+local PROCESSED_KEYCODES_WHITELIST = {
+    [Enum.KeyCode.ButtonL3] = true, --Left thumbstick.
+    [Enum.KeyCode.ButtonR3] = true, --Right thumbstick.
+}
+
 local VRService = game:GetService("VRService")
 local Workspace = game:GetService("Workspace")
 local Players = game:GetService("Players")
@@ -54,9 +59,9 @@ function CharacterBackpack.new(Character: Model): CharacterBackpack
     self.Backpack = Backpack3D.new(self.Player:WaitForChild("PlayerGui"), {Character, self.Player:WaitForChild("Backpack")})
 
     --Connect the interact events.
-    table.insert(self.Events, UserInputService.InputBegan:Connect(function(Input)
-        if UserInputService:GetFocusedTextBox() then return end
+    table.insert(self.Events, UserInputService.InputBegan:Connect(function(Input, Processed)
         if Input.KeyCode ~= self.KeyCode then return end
+        if Processed and not PROCESSED_KEYCODES_WHITELIST[Input.KeyCode] then return end
         if #self.Backpack.Inventory.Tools == 0 then return end
         self:Open()
     end))
