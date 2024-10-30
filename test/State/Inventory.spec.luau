@@ -10,8 +10,10 @@ return function()
     local TestInventory = nil
     local TestTools = {}
     beforeEach(function()
-        TestInventory = Inventory.new() :: any
-        TestInventory.ToolsChanged:Connect(function()
+        local NewTestInventory = Inventory.new()
+        TestInventory = NewTestInventory
+        NewTestInventory.ToolsChanged:Connect(function()
+            if TestInventory ~= NewTestInventory then return end
             ToolsChangedEventCalls += 1
         end)
         for _ = 1, 3 do
@@ -78,6 +80,7 @@ return function()
             local TestModel2 = Instance.new("Model")
             TestTools[2].Parent = TestModel2
             TestInventory:AddContainer(TestModel2)
+            task.wait()
 
             expect(ToolsChangedEventCalls).to.equal(3)
             expect(#TestInventory.Tools).to.equal(3)
@@ -96,6 +99,7 @@ return function()
             TestInventory:AddContainer(TestModel2)
             task.wait()
             TestTools[3].Parent = TestModel2
+            task.wait()
 
             expect(ToolsChangedEventCalls).to.equal(3)
             expect(#TestInventory.Tools).to.equal(3)
@@ -116,6 +120,7 @@ return function()
             TestTools[3].Parent = nil
             task.wait()
             TestTools[3].Parent = TestModel1
+            task.wait()
 
             expect(ToolsChangedEventCalls).to.equal(5)
             expect(#TestInventory.Tools).to.equal(3)
