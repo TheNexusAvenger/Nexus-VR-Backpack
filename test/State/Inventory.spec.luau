@@ -1,8 +1,4 @@
---[[
-TheNexusAvenger
-
-Tests for the Inventory class.
---]]
+--Tests for the Inventory class.
 --!strict
 
 local ServerScriptService = game:GetService("ServerScriptService")

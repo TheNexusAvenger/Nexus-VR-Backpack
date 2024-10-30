@@ -1,37 +1,30 @@
---[[
-TheNexusAvenger
-
-Simple state manager for the tools the player has access to.
---]]
+--Simple state manager for the tools the player has access to.
 --!strict
 
 local Inventory = {}
 Inventory.__index = Inventory
 
 export type Inventory = {
-    new: (Containers: {Instance}?) -> (Inventory),
-
+    Containers: {Instance},
     Tools: {BackpackItem},
+    Events: {RBXScriptConnection},
+    ToolsChangedEvent: BindableEvent,
     ToolsChanged: RBXScriptSignal,
-    AddContainer: (self: Inventory, Container: Instance) -> (),
-    Destroy: (self: Inventory) -> (),
-}
+} & typeof(setmetatable({}, Inventory))
 
 --[[
 Creates the inventory.
 --]]
 function Inventory.new(Containers: {Instance}?): Inventory
     --Create the object.
-    local self = {
+    local ToolsChangedEvent = Instance.new("BindableEvent")
+    local self = setmetatable({
         Containers = {},
         Tools = {},
         Events = {},
-    }
-    setmetatable(self, Inventory)
-
-    --Add the event.
-    self.ToolsChangedEvent = Instance.new("BindableEvent")
-    self.ToolsChanged = self.ToolsChangedEvent.Event
+        ToolsChangedEvent = ToolsChangedEvent,
+        ToolsChanged = ToolsChangedEvent.Event :: RBXScriptSignal,
+    }, Inventory) :: Inventory
 
     --Add the containers.
     if Containers then
@@ -41,13 +34,13 @@ function Inventory.new(Containers: {Instance}?): Inventory
     end
 
     --Return the object.
-    return (self :: any) :: Inventory
+    return self
 end
 
 --[[
 Adds a tool.
 --]]
-function Inventory:AddTool(Tool: BackpackItem): ()
+function Inventory.AddTool(self: Inventory, Tool: BackpackItem): ()
     if not Tool:IsA("BackpackItem") then return end
 
     --Return if the tool is already stored.
@@ -65,7 +58,7 @@ end
 --[[
 Adds a tool.
 --]]
-function Inventory:RemoveTool(Tool: BackpackItem): ()
+function Inventory.RemoveTool(self: Inventory, Tool: BackpackItem): ()
     if not Tool:IsA("BackpackItem") then return end
 
     --Return if the tool is in one of the containers.
@@ -91,7 +84,7 @@ end
 --[[
 Adds a container to monitor.
 --]]
-function Inventory:AddContainer(Container: Instance): ()
+function Inventory.AddContainer(self: Inventory, Container: Instance): ()
     table.insert(self.Containers, Container)
     for _, Tool in Container:GetChildren() do
         self:AddTool(Tool :: BackpackItem)
@@ -107,7 +100,7 @@ end
 --[[
 Destroys the inventory.
 --]]
-function Inventory:Destroy(): ()
+function Inventory.Destroy(self: Inventory): ()
     for _, Event in self.Events do
         Event:Disconnect()
     end
@@ -119,4 +112,4 @@ end
 
 
 
-return (Inventory :: any) :: Inventory
+return Inventory

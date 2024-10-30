@@ -1,8 +1,4 @@
---[[
-TheNexusAvenger
-
-Backpack associated with a character.
---]]
+--Backpack associated with a character.
 --!strict
 
 local PROCESSED_KEYCODES_WHITELIST = {
@@ -22,15 +18,15 @@ local CharacterBackpack = {}
 CharacterBackpack.__index = CharacterBackpack
 
 export type CharacterBackpack = {
-    new: (Character: Model) -> (CharacterBackpack),
-
     Enabled: boolean,
-    SetKeyCode: (self: CharacterBackpack, KeyCode: Enum.KeyCode) -> (),
-    SetUserCFrame: (self: CharacterBackpack, UserCFrame: Enum.UserCFrame) -> (),
-    Open: (self: CharacterBackpack) -> (),
-    Close: (self: CharacterBackpack) -> (),
-    Destroy: (self: CharacterBackpack) -> (),
-}
+    Player: Player,
+    KeyCode: Enum.KeyCode,
+    UserCFrame: Enum.UserCFrame,
+    Events: {RBXScriptConnection},
+    Humanoid: Humanoid,
+    Backpack: Backpack3D.Backpack3D,
+    UpdateFocusEvent: RBXScriptConnection?,
+} & typeof(setmetatable({}, CharacterBackpack))
 
 
 
@@ -39,21 +35,21 @@ Creates the character backpack.
 --]]
 function CharacterBackpack.new(Character: Model): CharacterBackpack
     --Create the object.
-    local self = {
+    local self = setmetatable({
         Enabled = true,
         Player = Players:GetPlayerFromCharacter(Character),
         KeyCode = Enum.KeyCode.ButtonR3,
         UserCFrame = Enum.UserCFrame.RightHand,
         Events = {},
-    }
-    setmetatable(self, CharacterBackpack)
+    }, CharacterBackpack) :: CharacterBackpack
 
     --Wait for the Humanoid.
-    self.Humanoid = Character:FindFirstChildOfClass("Humanoid")
-    while not self.Humanoid do
+    local Humanoid = Character:FindFirstChildOfClass("Humanoid")
+    while not Humanoid do
         Character.ChildAdded:Wait()
-        self.Humanoid = Character:FindFirstChildOfClass("Humanoid")
+        Humanoid = Character:FindFirstChildOfClass("Humanoid")
     end
+    self.Humanoid = Humanoid :: Humanoid
 
     --Create the backpack.
     self.Backpack = Backpack3D.new(self.Player:WaitForChild("PlayerGui"), {Character, self.Player:WaitForChild("Backpack")})
@@ -86,27 +82,27 @@ function CharacterBackpack.new(Character: Model): CharacterBackpack
     self:SetKeyCode(Enum.KeyCode.ButtonR3)
 
     --Return the object.
-    return (self :: any) :: CharacterBackpack
+    return self
 end
 
 --[[
 Returns the CFrame to open the backpack at.
 --]]
-function CharacterBackpack:GetBackpackCFrame(): CFrame
+function CharacterBackpack.GetBackpackCFrame(self: CharacterBackpack): CFrame
     return (Workspace.CurrentCamera:GetRenderCFrame() * UserInputService:GetUserCFrame(Enum.UserCFrame.Head):Inverse() * UserInputService:GetUserCFrame(self.UserCFrame))
 end
 
 --[[
 Returns the position the hand is at.
 --]]
-function CharacterBackpack:GetHandPosition(): Vector3
+function CharacterBackpack.GetHandPosition(self: CharacterBackpack): Vector3
     return self:GetBackpackCFrame().Position
 end
 
 --[[
 Sets the key to use for opening and closing the backpack.
 --]]
-function CharacterBackpack:SetKeyCode(KeyCode: Enum.KeyCode): ()
+function CharacterBackpack.SetKeyCode(self: CharacterBackpack, KeyCode: Enum.KeyCode): ()
     self.KeyCode = KeyCode
     if UserInputService:IsKeyDown(KeyCode) then
         self:Open()
@@ -116,14 +112,14 @@ end
 --[[
 Sets the input to open the menu at.
 --]]
-function CharacterBackpack:SetUserCFrame(UserCFrame: Enum.UserCFrame): ()
+function CharacterBackpack.SetUserCFrame(self: CharacterBackpack, UserCFrame: Enum.UserCFrame): ()
     self.UserCFrame = UserCFrame
 end
 
 --[[
 Opens the backpack.
 --]]
-function CharacterBackpack:Open(): ()
+function CharacterBackpack.Open(self: CharacterBackpack): ()
     --Open the backpack.
     if not self.Enabled then return end
     if self.Backpack.Opened then return end
@@ -144,7 +140,7 @@ end
 --[[
 Closes the backpack.
 --]]
-function CharacterBackpack:Close(): ()
+function CharacterBackpack.Close(self: CharacterBackpack): ()
     if not self.Backpack.Opened then return end
 
     --Update the tool.
@@ -170,7 +166,7 @@ end
 --[[
 Destroys the backpack.
 --]]
-function CharacterBackpack:Destroy(): ()
+function CharacterBackpack.Destroy(self: CharacterBackpack): ()
     --Disconnect the events.
     if self.UpdateFocusEvent then
         self.UpdateFocusEvent:Disconnect()
@@ -193,4 +189,5 @@ function CharacterBackpack:Destroy(): ()
 end
 
 
-return (CharacterBackpack :: any) :: CharacterBackpack
+
+return CharacterBackpack

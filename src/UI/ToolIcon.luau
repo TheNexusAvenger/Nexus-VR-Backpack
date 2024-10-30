@@ -1,20 +1,21 @@
---[[
-TheNexusAvenger
-
-Class for a tool icon.
---]]
+--Class for a tool icon.
 --!strict
 
 local ToolIcon = {}
 ToolIcon.__index = ToolIcon
 
 export type ToolIcon = {
-    new: (Parent: GuiObject, PositionX: number, PositionY: number) -> (ToolIcon),
-
-    SetTool: (self: ToolIcon, Tool: BackpackItem) -> (),
-    SetFocused: (self: ToolIcon, Focused: boolean) -> (),
-    Destroy: (self: ToolIcon) -> (),
-}
+    Focused: boolean,
+    Players: Players,
+    TweenService: TweenService,
+    RelativePositionX: number,
+    RelativePositionY: number,
+    Background: ImageLabel,
+    ToolText: TextLabel,
+    ToolImage: ImageLabel,
+    Tool: BackpackItem?,
+    ToolEvents: {RBXScriptConnection},
+} & typeof(setmetatable({}, ToolIcon))
 
 
 
@@ -23,14 +24,14 @@ Creates the tool icon.
 --]]
 function ToolIcon.new(Parent: GuiObject, PositionX: number, PositionY: number): ToolIcon
     --Create the object.
-    local self = {
+    local self = setmetatable({
         Focused = false,
         Players = game:GetService("Players"), --Stored to be replaced in unit tests.
         TweenService = game:GetService("TweenService"), --Stored to be replaced in unit tests.
         RelativePositionX = (PositionX * (math.sqrt(3) / 2)) + 0.5,
         RelativePositionY = (PositionY * 0.75) + 0.5,
-    }
-    setmetatable(self, ToolIcon)
+        ToolEvents = {},
+    }, ToolIcon) :: ToolIcon
 
     --Create the frames.
     local Background = Instance.new("ImageLabel")
@@ -71,13 +72,13 @@ function ToolIcon.new(Parent: GuiObject, PositionX: number, PositionY: number): 
     self.ToolImage = ToolImage
 
     --Return the object.
-    return (self :: any) :: ToolIcon
+    return self
 end
 
 --[[
 Updates the color of the icon.
 --]]
-function ToolIcon:UpdateColor(): ()
+function ToolIcon.UpdateColor(self: ToolIcon): ()
     --Update the text and icon.
     if self.Tool then
         if self.Tool.TextureId == "" then
@@ -99,7 +100,8 @@ function ToolIcon:UpdateColor(): ()
     local Transparency = (self.Tool and 0.5 or 0.8)
     local Size = ((self.Tool and self.Focused and UDim2.new(1.05, 0, 1.05, 0)) or UDim2.new(0.9, 0, 0.9, 0))
     if self.Tool then
-        if self.Players.LocalPlayer.Character and self.Players.LocalPlayer.Character == self.Tool.Parent then
+        local LocalPlayer = self.Players.LocalPlayer :: Player
+        if LocalPlayer.Character and LocalPlayer.Character == self.Tool.Parent then
             if self.Focused then
                 Color = Color3.new(0.2, 1, 0.2)
             else
@@ -123,23 +125,20 @@ end
 --[[
 Sets the tool for the icon.
 --]]
-function ToolIcon:SetTool(Tool: BackpackItem): ()
-    if Tool == (self.Tool :: any) then return end
+function ToolIcon.SetTool(self: ToolIcon, Tool: BackpackItem): ()
+    if Tool == self.Tool then return end
 
     --Disconnect the tool events.
     self.Tool = Tool
-    if self.ToolEvents then
-        for _, Event in self.ToolEvents do
-            Event:Disconnect()
-        end
-        self.ToolEvents = nil
+    for _, Event in self.ToolEvents do
+        Event:Disconnect()
     end
+    self.ToolEvents = {}
     self:UpdateColor()
     if not Tool then return end
 
     --Connect the tool events.
-    self.ToolEvents = {} :: any
-    table.insert(self.ToolEvents :: any, Tool.Changed:Connect(function(PropertyName)
+    table.insert(self.ToolEvents, Tool.Changed:Connect(function(PropertyName)
         if PropertyName ~= "Name" and PropertyName ~= "TextureId" and PropertyName ~= "Parent" then return end
         self:UpdateColor()
     end))
@@ -148,7 +147,7 @@ end
 --[[
 Sets the icon as focused.
 --]]
-function ToolIcon:SetFocused(Focused: boolean): ()
+function ToolIcon.SetFocused(self: ToolIcon, Focused: boolean): ()
     self.Focused = Focused
     self:UpdateColor()
 end
@@ -156,16 +155,14 @@ end
 --[[
 Destroys the tool icon.
 --]]
-function ToolIcon:Destroy(): ()
+function ToolIcon.Destroy(self: ToolIcon): ()
     self.Background:Destroy()
-    if self.ToolEvents then
-        for _, Event in self.ToolEvents do
-            Event:Disconnect()
-        end
-        self.ToolEvents = nil
+    for _, Event in self.ToolEvents do
+        Event:Disconnect()
     end
+    self.ToolEvents = {}
 end
 
 
 
-return (ToolIcon :: any) :: ToolIcon
+return ToolIcon

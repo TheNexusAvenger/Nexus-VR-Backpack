@@ -1,8 +1,4 @@
---[[
-TheNexusAvenger
-
-Tests for the ToolIcon class.
---]]
+--Tests for the ToolIcon class.
 --!strict
 
 local ServerScriptService = game:GetService("ServerScriptService")

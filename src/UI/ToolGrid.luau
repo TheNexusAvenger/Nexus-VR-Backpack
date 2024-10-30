@@ -1,8 +1,4 @@
---[[
-TheNexusAvenger
-
-Hexagon grid for showing tools.
---]]
+--Hexagon grid for showing tools.
 --!strict
 
 local ToolIcon = require(script.Parent:WaitForChild("ToolIcon"))
@@ -11,14 +7,10 @@ local ToolGrid = {}
 ToolGrid.__index = ToolGrid
 
 export type ToolGrid = {
-    new: () -> (ToolGrid),
-
+    IconGroups: {{ToolIcon.ToolIcon}},
     AdornFrame: Frame,
-    IconGroups: {{any}},
-    SetTools: (self: ToolGrid, Tools: {BackpackItem}) -> (),
-    UpdateFocusedIcon: (self: ToolGrid, RelativePositionX: number, RelativePositionY: number) -> (),
-    Destroy: (self: ToolGrid) -> (),
-}
+    FocusedIcon: ToolIcon.ToolIcon?,
+} & typeof(setmetatable({}, ToolGrid))
 
 
 
@@ -27,10 +19,9 @@ Creates the tool grid.
 --]]
 function ToolGrid.new(): ToolGrid
     --Create the object.
-    local self = {
-        IconGroups = {}
-    }
-    setmetatable(self, ToolGrid)
+    local self = setmetatable({
+        IconGroups = {},
+    }, ToolGrid) :: ToolGrid
 
     --Create the adorn frame.
     local AdornFrame = Instance.new("Frame")
@@ -40,20 +31,20 @@ function ToolGrid.new(): ToolGrid
     self.AdornFrame = AdornFrame
 
     --Return the object.
-    return (self :: any) :: ToolGrid
+    return self
 end
 
 --[[
 Creates a ToolIcon.
 --]]
-function ToolGrid:CreateToolIcon(RelativePositionX: number, RelativePositionY: number)
+function ToolGrid.CreateToolIcon(self: ToolGrid, RelativePositionX: number, RelativePositionY: number)
     return ToolIcon.new(self.AdornFrame, RelativePositionX, RelativePositionY)
 end
 
 --[[
 Sets the radius of the grid.
 --]]
-function ToolGrid:SetRadius(Radius: number): ()
+function ToolGrid.SetRadius(self: ToolGrid, Radius: number): ()
     Radius = math.max(1, Radius)
     if Radius == #self.IconGroups then return end
 
@@ -103,7 +94,7 @@ end
 --[[
 Sets the tools for the grid to show.
 --]]
-function ToolGrid:SetTools(Tools: {BackpackItem}): ()
+function ToolGrid.SetTools(self: ToolGrid, Tools: {BackpackItem}): ()
     --Update the radius.
     local MinimumRadius = 1
     local OpenSlots = 6
@@ -126,7 +117,7 @@ end
 --[[
 Updates the icon that is focused.
 --]]
-function ToolGrid:UpdateFocusedIcon(RelativePositionX: number, RelativePositionY: number): ()
+function ToolGrid.UpdateFocusedIcon(self: ToolGrid, RelativePositionX: number, RelativePositionY: number): ()
     --Determine the new focused icon.
     local NewFocusedIcon = nil
     local DistanceToFocusedIcon = 0.5
@@ -155,7 +146,7 @@ end
 --[[
 Destroys the tool grid.
 --]]
-function ToolGrid:Destroy()
+function ToolGrid.Destroy(self: ToolGrid)
     self.AdornFrame:Destroy()
     for _, IconGroup in self.IconGroups do
         for _, Icon in IconGroup do
@@ -167,4 +158,4 @@ end
 
 
 
-return (ToolGrid :: any) :: ToolGrid
+return ToolGrid

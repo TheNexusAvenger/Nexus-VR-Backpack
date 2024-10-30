@@ -1,8 +1,4 @@
---[[
-TheNexusAvenger
-
-Tests for the ToolGrid class.
---]]
+--Tests for the ToolGrid class.
 --!strict
 
 local ServerScriptService = game:GetService("ServerScriptService")
