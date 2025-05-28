@@ -4,16 +4,16 @@
         "$className": "DataModel",
         "ServerScriptService": {
             "MainModule": {
-                "$path": "./place/ServerScriptService/MainModule.lua",
+                "$path": "./place/ServerScriptService/MainModule.luau",
                 "NexusVRBackpack": {
                     "$path": "."
                 }
             },
             "TestLoader": {
-                "$path": "./place/ServerScriptService/TestLoader.server.lua"
+                "$path": "./place/ServerScriptService/TestLoader.server.luau"
             },
             "NexusVRCharacterModelLoader": {
-                "$path": "./place/ServerScriptService/NexusVRCharacterModelLoader.server.lua"
+                "$path": "./place/ServerScriptService/NexusVRCharacterModelLoader.server.luau"
             }
         },
         "StarterPlayer": {
