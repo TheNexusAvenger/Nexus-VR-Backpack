@@ -1,0 +1,15 @@
+[package]
+name = "thenexusavenger/nexus-vr-backpack"
+repository = "https://github.com/TheNexusAvenger/Nexus-VR-Backpack"
+description = "Custom backpack for using Tools in Roblox while in VR."
+license = "MIT"
+authors = ["TheNexusAvenger"]
+version = "1.2.0"
+
+registry = "https://github.com/UpliftGames/wally-index"
+realm = "shared"
+
+exclude = ["**"]
+include = ["src", "src/*", "default.project.json", "wally.lock", "wally.toml"]
+
+[dependencies]
